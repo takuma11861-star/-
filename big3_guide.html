@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BIG3 完全ガイド</title>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700;800&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+JP:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #ffffff;
+  --ink: #111111;
+  --muted: #444444;
+  --accent: #c0390a;
+  --accent2: #145e2e;
+  --accent3: #0f3070;
+  --border: #cccccc;
+  --surface: #f4f4f4;
+  --sq: #c0390a;
+  --bp: #0f3070;
+  --dl: #145e2e;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background: var(--bg); color: var(--ink); font-family: 'Noto Sans JP', sans-serif; line-height: 1.7; }
+.header { background: var(--ink); color: var(--bg); padding: 32px 24px 24px; position: relative; overflow: hidden; }
+.header-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 4px; color: var(--accent); margin-bottom: 8px; text-transform: uppercase; }
+.header-title { font-family: 'Shippori Mincho', serif; font-size: 28px; font-weight: 800; line-height: 1.2; }
+.header-sub { font-size: 12px; color: #cccccc; margin-top: 8px; font-family: 'JetBrains Mono', monospace; }
+.nav { background: var(--ink); display: flex; overflow-x: auto; scrollbar-width: none; border-top: 1px solid rgba(255,255,255,0.08); }
+.nav::-webkit-scrollbar { display: none; }
+.nav-tab { flex-shrink: 0; padding: 12px 16px; font-size: 11px; font-weight: 700; letter-spacing: 2px; color: #dddddd; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s; white-space: nowrap; }
+.nav-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+.main { padding: 0; max-width: 540px; margin: 0 auto; }
+.section { display: none; padding: 20px 16px 40px; }
+.section.active { display: block; }
+.ch { display: flex; align-items: baseline; gap: 12px; margin-bottom: 20px; margin-top: 28px; padding-bottom: 10px; border-bottom: 2px solid var(--ink); }
+.ch:first-child { margin-top: 0; }
+.ch-num { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); letter-spacing: 2px; }
+.ch-title { font-family: 'Shippori Mincho', serif; font-size: 20px; font-weight: 700; }
+.card { background: var(--surface); border: 1px solid var(--border); padding: 16px; margin-bottom: 12px; }
+.card-label { font-size: 9px; letter-spacing: 3px; font-weight: 700; color: var(--muted); margin-bottom: 10px; text-transform: uppercase; }
+.htable { width: 100%; border-collapse: collapse; font-size: 13px; }
+.htable th { background: var(--ink); color: #ffffff; padding: 8px 10px; text-align: left; font-size: 10px; letter-spacing: 2px; font-weight: 700; }
+.htable td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.6; }
+.htable tr:last-child td { border-bottom: none; }
+.htable .item { font-weight: 700; font-size: 13px; }
+.htable .val { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent); }
+.htable .reason { font-size: 11px; color: #333333; }
+.lift-header { padding: 14px 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+.lift-num { font-family: 'Shippori Mincho', serif; font-size: 48px; font-weight: 800; line-height: 1; opacity: 0.12; }
+.lift-name-big { font-family: 'Shippori Mincho', serif; font-size: 22px; font-weight: 700; }
+.lift-sub { font-size: 11px; color: var(--muted); }
+.sq-accent { border-left: 3px solid var(--sq); }
+.bp-accent { border-left: 3px solid var(--bp); }
+.dl-accent { border-left: 3px solid var(--dl); }
+.point { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.point:last-child { border-bottom: none; }
+.point-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+.point-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.point-desc { font-size: 11px; color: var(--muted); line-height: 1.7; }
+.warn { background: rgba(196,66,10,0.06); border: 1px solid rgba(196,66,10,0.25); border-left: 3px solid var(--accent); padding: 12px 14px; margin-bottom: 12px; }
+.warn-title { font-size: 11px; font-weight: 700; color: var(--accent); letter-spacing: 1px; margin-bottom: 6px; }
+.warn p { font-size: 12px; line-height: 1.8; color: #111111; }
+.ok-box { background: rgba(20,94,46,0.06); border: 1px solid rgba(20,94,46,0.25); border-left: 3px solid var(--accent2); padding: 12px 14px; margin-bottom: 12px; }
+.ok-box p { font-size: 12px; line-height: 1.8; color: #111111; }
+.step { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+.step:last-child { border-bottom: none; }
+.step-num { flex-shrink: 0; width: 24px; height: 24px; background: var(--ink); color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; margin-top: 1px; }
+.step-body { flex: 1; }
+.step-title { font-size: 13px; font-weight: 700; margin-bottom: 3px; }
+.step-desc { font-size: 11px; color: var(--muted); line-height: 1.7; }
+.code { background: #1e1e1e; color: #e8e8e8; padding: 14px; font-family: 'JetBrains Mono', monospace; font-size: 11px; line-height: 1.9; margin-bottom: 12px; white-space: pre-wrap; overflow-x: auto; }
+.code .c { color: #aaaaaa; }
+.code .h { color: #ffd966; }
+.code .r { color: #ff9966; }
+.checklist { list-style: none; }
+.checklist li { padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; display: flex; align-items: flex-start; gap: 8px; }
+.checklist li:last-child { border-bottom: none; }
+.checklist li::before { content: '□'; font-size: 14px; flex-shrink: 0; color: var(--muted); margin-top: 1px; }
+.check-sub { font-size: 11px; color: var(--muted); display: block; margin-top: 2px; }
+.day-btn { flex:1; padding:12px 8px; background:#f4f4f4; border:2px solid #cccccc; font-family:'Noto Sans JP',sans-serif; font-size:13px; font-weight:700; cursor:pointer; line-height:1.6; color:#111111; transition:all 0.15s; }
+.active-day { background:var(--ink); color:#ffffff; border-color:var(--ink); }
+.set-row { display:grid; grid-template-columns:28px 1fr 1fr 1fr auto; gap:6px; align-items:center; padding:8px 0; border-bottom:1px solid #eeeeee; }
+.set-row:last-child { border-bottom:none; }
+.set-label { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; color:#888888; }
+.set-inp { background:#ffffff; border:1px solid #cccccc; padding:8px 4px; font-family:'JetBrains Mono',monospace; font-size:13px; color:#111111; width:100%; outline:none; text-align:center; }
+.set-inp:focus { border-color:var(--ink); }
+.set-col { display:flex; flex-direction:column; }
+.set-header { display:grid; grid-template-columns:28px 1fr 1fr 1fr auto; gap:6px; padding:4px 0 8px; border-bottom:1px solid #cccccc; margin-bottom:4px; }
+.set-header span { font-size:9px; letter-spacing:1px; color:#666666; font-weight:700; text-align:center; }
+.set-header span:first-child { text-align:left; }
+.del-btn { background:none; border:none; color:#cccccc; font-size:16px; cursor:pointer; padding:0 2px; line-height:1; }
+.del-btn:hover { color:var(--accent); }
+.add-set-btn { background:none; border:1px dashed #cccccc; color:#666666; font-family:'Noto Sans JP',sans-serif; font-size:12px; padding:8px; width:100%; cursor:pointer; margin-top:8px; }
+.add-set-btn:hover { border-color:var(--ink); color:var(--ink); }
+.log-inp { background:#f4f4f4; border:1px solid #cccccc; padding:8px 10px; font-family:'JetBrains Mono',monospace; font-size:13px; color:#111111; outline:none; }
+.log-inp:focus { border-color:var(--ink); }
+.hist-card { background:#f4f4f4; border:1px solid #cccccc; padding:14px; margin-bottom:10px; }
+.hist-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; }
+.hist-date { font-size:12px; color:#666666; font-family:'JetBrains Mono',monospace; }
+.hist-day { font-size:11px; font-weight:700; color:#111111; }
+.hist-lift-row { font-size:12px; margin-bottom:6px; padding-bottom:6px; border-bottom:1px solid #e0e0e0; }
+.hist-lift-row:last-child { border-bottom:none; margin-bottom:0; padding-bottom:0; }
+.hist-lift-name { font-weight:700; font-size:11px; margin-bottom:4px; }
+.hist-sets-line { font-family:'JetBrains Mono',monospace; font-size:11px; color:#444444; }
+.hist-memo { font-size:11px; color:#666666; margin-top:8px; padding-top:8px; border-top:1px solid #e0e0e0; }
+.del-hist { background:none; border:none; color:#cccccc; font-size:12px; cursor:pointer; }
+.del-hist:hover { color:var(--accent); }
+.empty-hist { text-align:center; padding:32px; color:#aaaaaa; font-size:13px; }
+.timer-bar { background:var(--ink); color:#ffffff; padding:14px 16px; display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; position:sticky; top:0; z-index:50; }
+.timer-display { font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:700; letter-spacing:2px; color:#ffffff; }
+.timer-label { font-size:10px; color:#cccccc; letter-spacing:2px; margin-bottom:2px; }
+.timer-btns { display:flex; gap:8px; }
+.t-btn { background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.3); color:#ffffff; padding:6px 12px; font-family:'Noto Sans JP',sans-serif; font-size:11px; font-weight:700; cursor:pointer; }
+.t-btn.running { background:var(--accent); border-color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-label">PERSONAL TRAINING GUIDE</div>
+  <div class="header-title">BIG3 完全攻略マニュアル</div>
+  <div class="header-sub">25歳 / 170cm / 65kg / 初心者 / 週2回</div>
+</div>
+<div class="nav">
+  <div class="nav-tab active" onclick="show('health')">健康診断</div>
+  <div class="nav-tab" onclick="show('deadlift')">デッドリフト段階</div>
+  <div class="nav-tab" onclick="show('squat')">スクワット</div>
+  <div class="nav-tab" onclick="show('bench')">ベンチプレス</div>
+  <div class="nav-tab" onclick="show('rules')">全体ルール</div>
+  <div class="nav-tab" onclick="show('logger')">📝 記録</div>
+</div>
+<div class="main">
+
+<div id="health" class="section active">
+  <div class="ch"><span class="ch-num">01</span><span class="ch-title">会社の健康診断で見るべき項目</span></div>
+  <div class="ok-box"><p>会社の健康診断（法定項目）で必要な情報はほぼ全て揃います。追加費用は不要。結果が出たらこのリストと照合してください。</p></div>
+  <div class="card">
+    <div class="card-label">確認すべき検査値</div>
+    <table class="htable">
+      <tr><th>項目</th><th>正常値</th><th>なぜ重要か</th></tr>
+      <tr><td><div class="item">血圧</div></td><td><div class="val">収縮期&lt;130<br>拡張期&lt;85</div></td><td><div class="reason">デッドリフト中は瞬間的に160〜200mmHgまで上昇する。高血圧があると脳血管に過剰な負荷がかかる</div></td></tr>
+      <tr><td><div class="item">空腹時血糖</div></td><td><div class="val">&lt;100 mg/dL</div></td><td><div class="reason">糖代謝異常があると筋肉の回復が著しく遅れる。クレアチン・プロテインの効果も半減する</div></td></tr>
+      <tr><td><div class="item">クレアチニン</div></td><td><div class="val">0.6〜1.1 mg/dL</div></td><td><div class="reason">プロテイン160g/日・クレアチン摂取前のベースライン確認。腎機能低下時は摂取量を調整する</div></td></tr>
+      <tr><td><div class="item">AST / ALT</div></td><td><div class="val">AST&lt;40<br>ALT&lt;45</div></td><td><div class="reason">サプリ摂取前のベースライン。筋トレ後はASTが一時上昇するため比較基準として重要</div></td></tr>
+      <tr><td><div class="item">尿酸値</div></td><td><div class="val">&lt;7.0 mg/dL</div></td><td><div class="reason">高強度トレーニングでプリン体代謝が増加する。日本人男性に多い項目</div></td></tr>
+    </table>
+  </div>
+  <div class="warn">
+    <div class="warn-title">⚠️ この数値が出たら医師に相談してから開始</div>
+    <p>血圧 収縮期140以上 → 高強度種目は一時保留<br>血糖 126mg/dL以上 → 糖尿病の可能性。医師の確認必須<br>クレアチニン 1.2以上 → プロテイン量を体重×1.5gに抑える<br>尿酸値 8.0以上 → クレアチン開始を一時保留</p>
+  </div>
+</div>
+
+<div id="deadlift" class="section">
+  <div class="ch"><span class="ch-num">02</span><span class="ch-title">デッドリフト段階的習得</span></div>
+  <div class="warn"><div class="warn-title">⚠️ なぜ段階を踏むか</div><p>体幹筋群が未発達な状態で重量をかけると椎間板ヘルニアになる。初心者の腰痛の70%はここが原因。</p></div>
+  <div class="ch" style="margin-top:20px"><span class="ch-num">—</span><span class="ch-title" style="font-size:16px">PHASE 0：体幹構築（1〜2週間）</span></div>
+  <div class="card dl-accent">
+    <div class="card-label">重量ゼロ。動作の習得のみ</div>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">ブレーシング（腹圧固定）</div><div class="step-desc">立った状態でお腹全体に力を入れる。パンチを受ける直前のイメージ。その状態で浅い呼吸ができればOK。毎日30秒×3セット。</div></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">ヒップヒンジ動作</div><div class="step-desc">壁から30cm離れて立ち、お尻を壁に向かってゆっくり引く。膝は軽く曲げるだけ。背中は絶対に丸めない。10回×3セット。</div></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">ルーマニアンデッドリフト（バーなし）</div><div class="step-desc">手に何も持たずヒップヒンジ動作を繰り返す。ハムストリング（太もも裏）の張りを感じながら下げる。背中を丸めた瞬間に止める。10回×3セット。</div></div></div>
+  </div>
+  <div class="ch" style="margin-top:20px"><span class="ch-num">—</span><span class="ch-title" style="font-size:16px">PHASE 1：バーのみ〜軽重量（3〜4週間）</span></div>
+  <div class="card dl-accent">
+    <div class="code">PHASE 1
+バーのみ（20kg） × 5回 × 3セット  ← フォーム確認のみ
+30kg × 5回 × 1セット
+
+PHASE 2（本番・5週目〜）
+開始重量：40kg
+ウォームアップ  20kg×5回 → 28kg×3回
+本番セット     40kg×5回×1セット
+
+週次進行
+Week5: 40kg → Week6: 45kg → Week7: 50kg
+Week8: 55kg → Week9: ディロード40kg
+Week10〜: 55kg、以降+5kg/週</div>
+  </div>
+  <div class="warn">
+    <div class="warn-title">⚠️ 絶対やってはいけないこと</div>
+    <p>① 背中を丸める → 椎間板への圧力が6倍になる<br>② バーを体から離す → 腰への負荷が増大<br>③ 腰で持ち上げる → 脊柱起立筋に過剰負荷<br>④ 限界まで追い込む → 1セット×5回が限界値</p>
+  </div>
+  <div class="ok-box"><p><strong>合格基準：</strong>鏡で見て背中が一直線をキープできているか。重量より先にフォームの完成度。腰に違和感を感じたら即座に重量を下げる。</p></div>
+</div>
+
+<div id="squat" class="section">
+  <div class="ch"><span class="ch-num">03</span><span class="ch-title">スクワット</span></div>
+  <div class="lift-header sq-accent" style="background:rgba(192,57,10,0.04)">
+    <div class="lift-num" style="color:var(--sq)">01</div>
+    <div class="lift-info"><div class="lift-name-big">スクワット</div><div class="lift-sub">大腿四頭筋・ハムストリング・大臀筋・脊柱起立筋 ／ 3セット×5回</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">開始重量と進行</div>
+    <div class="code">開始重量：40kg　セット：3×5　休憩：3分
+Week1: 40kg → Week2: 42.5kg
+Week3: 45kg → Week4: 47.5kg
+Week5: ディロード 32kg（本番の80%）</div>
+  </div>
+  <div class="card">
+    <div class="card-label">フォームのポイント</div>
+    <div class="point"><div class="point-icon">👟</div><div class="point-body"><div class="point-title">足の置き方・靴</div><div class="point-desc">肩幅よりやや広め。つま先30〜45度外側。靴は底が硬いもの必須（コンバース可）。ランニングシューズはNG。</div></div></div>
+    <div class="point"><div class="point-icon">🏗️</div><div class="point-body"><div class="point-title">バーの位置（ロースクワット推奨）</div><div class="point-desc">バーを肩甲骨の棘（背中の出っ張り）に乗せる。腰への負担が分散され重量を扱いやすい。</div></div></div>
+    <div class="point"><div class="point-icon">📐</div><div class="point-body"><div class="point-title">しゃがみの深さ</div><div class="point-desc">太ももが床と平行（パラレル）が最低ライン。浅いと大腿四頭筋への刺激が半減する。</div></div></div>
+    <div class="point"><div class="point-icon">🦵</div><div class="point-body"><div class="point-title">膝の向き</div><div class="point-desc">膝は常につま先と同じ方向。内側に倒れる（ニーイン）は膝靱帯損傷の原因。「外に広げる意識」を常に持つ。</div></div></div>
+  </div>
+  <div class="warn"><div class="warn-title">⚠️ やってはいけないこと</div><p>① 腰を丸めてしゃがむ → 椎間板ダメージ<br>② かかとを浮かせる → 膝を痛める<br>③ 膝が内側に倒れる → 前十字靱帯損傷リスク<br>④ 浅くしゃがむ → 効果が半減</p></div>
+  <div class="card">
+    <div class="card-label">猫背・体の硬さ対策（毎日2分）</div>
+    <div class="point"><div class="point-icon">🔄</div><div class="point-body"><div class="point-title">胸椎伸展ストレッチ（猫背改善）</div><div class="point-desc">フォームローラーまたは丸めたタオルを肩甲骨の間に置いて仰向けに寝る。30秒×3セット。4〜6週間で改善が出始める。</div></div></div>
+    <div class="point"><div class="point-icon">🦶</div><div class="point-body"><div class="point-title">足首ストレッチ（しゃがみ改善）</div><div class="point-desc">壁に手をついてつま先を壁に近づけながら膝を壁に押し当てる。かかとは床から離さない。左右各30秒。</div></div></div>
+  </div>
+</div>
+
+<div id="bench" class="section">
+  <div class="ch"><span class="ch-num">04</span><span class="ch-title">ベンチプレス</span></div>
+  <div class="lift-header bp-accent" style="background:rgba(15,48,112,0.04)">
+    <div class="lift-num" style="color:var(--bp)">02</div>
+    <div class="lift-info"><div class="lift-name-big">ベンチプレス</div><div class="lift-sub">大胸筋・三角筋前部・上腕三頭筋 ／ 3セット×5回</div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">開始重量と進行</div>
+    <div class="code">開始重量：30kg　セット：3×5　休憩：3分
+Week1: 30kg → Week2: 32.5kg
+Week3: 35kg → Week4: 37.5kg
+Week5: ディロード 24kg（本番の80%）</div>
+  </div>
+  <div class="card">
+    <div class="card-label">フォームのポイント</div>
+    <div class="point"><div class="point-icon">🤝</div><div class="point-body"><div class="point-title">グリップ幅</div><div class="point-desc">手首の真下に肘が来る幅。目安は肩幅の1.5倍。広すぎると肩関節への負荷が増大する。</div></div></div>
+    <div class="point"><div class="point-icon">🔺</div><div class="point-body"><div class="point-title">肩甲骨の寄せ・下制</div><div class="point-desc">ベンチに横になる前に肩甲骨を「寄せて・下げる」。これが最重要の準備動作。猫背があるとできないため胸椎ストレッチが先決。</div></div></div>
+    <div class="point"><div class="point-icon">📍</div><div class="point-body"><div class="point-title">降ろす位置</div><div class="point-desc">乳頭のやや下（胸の下部）に降ろす。胸に完全につける（ハーフレンジはNG）。肘の角度は体幹に対して45〜60度。</div></div></div>
+    <div class="point"><div class="point-icon">😮‍💨</div><div class="point-body"><div class="point-title">呼吸</div><div class="point-desc">降ろすときに吸う。押し上げるときに吐く。腹圧を保ちながら行う。</div></div></div>
+  </div>
+  <div class="warn"><div class="warn-title">⚠️ やってはいけないこと</div><p>① 手首を寝かせる → 手首関節に直接負荷。リストラップで防ぐ<br>② 胸で弾ませる → 肋骨・胸骨へのダメージ<br>③ 肩甲骨を寄せずに押す → 肩関節インピンジメントの原因<br>④ 一人での高重量 → 必ずセーフティバーを設定する</p></div>
+  <div class="ok-box"><p><strong>セーフティについて：</strong>ベンチプレスは唯一「バーに潰される」リスクがある種目。一人の場合は必ずセーフティバーを胸の高さより10cm低い位置に設定すること。</p></div>
+</div>
+
+<div id="rules" class="section">
+  <div class="ch"><span class="ch-num">05</span><span class="ch-title">全体ルール・総まとめ</span></div>
+  <div class="card">
+    <div class="card-label">週間スケジュール</div>
+    <div class="code">Day A（金曜夜）スクワット中心
+スクワット    3セット×5回  休憩3分
+ベンチプレス  3セット×5回  休憩3分
+合計：約30〜40分
+
+Day B（土 or 日）デッドリフト中心
+デッドリフト  1セット×5回
+スクワット    2セット×5回  休憩3分
+合計：約25〜35分
+
+※ Day AとDay Bの間は最低48時間あける</div>
+  </div>
+  <div class="card">
+    <div class="card-label">1回の流れ（合計約60分）</div>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">トレ前30分 ── EAA 10g＋水400ml</div><div class="step-desc">筋肉の分解（カタボリズム）を抑制。牛乳は使わない（乳糖不耐症のため）。</div></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">ウォームアップ 15分</div><div class="step-desc">ウォーキング5分 → 動的ストレッチ5分 → ウォームアップセット（本番の50%×5回 → 70%×3回）5分。省略は怪我の原因。</div></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">本番トレーニング 30〜40分</div><div class="step-desc">セット間は3分休憩。インターバルを短くすると重量が落ちる。3分は妥協しない。</div></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">トレ後すぐ ── プロテイン25〜30g＋水200ml</div><div class="step-desc">ホエイアイソレート（WPI）を選ぶ（乳糖不耐症のため）。これを先に飲んでからサウナへ。</div></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><div class="step-title">クールダウン 10分</div><div class="step-desc">静的ストレッチ（股関節・胸・背中・ハムストリング）各部位30秒キープ。</div></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body"><div class="step-title">サウナ 6〜10分（任意）</div><div class="step-desc">血流改善・成長ホルモン分泌促進。水風呂90秒で効果増大。前後に水500ml以上。</div></div></div>
+  </div>
+  <div class="card">
+    <div class="card-label">毎日やること</div>
+    <ul class="checklist">
+      <li>睡眠 7時間以上<span class="check-sub">成長ホルモンの90%は睡眠中に分泌。最大の回復手段</span></li>
+      <li>タンパク質 1日160g<span class="check-sub">体重65kg×2.5g。プロテインで補う</span></li>
+      <li>クレアチン 5g<span class="check-sub">毎日・タイミング自由。プロテインに混ぜてOK</span></li>
+      <li>水分 2〜2.5L<span class="check-sub">クレアチン摂取時は特に重要</span></li>
+      <li>体重を毎朝記録<span class="check-sub">起床後・排尿後・同条件で。週単位で見る</span></li>
+    </ul>
+  </div>
+  <div class="card">
+    <div class="card-label">サプリメント優先順位</div>
+    <div class="code">① ホエイアイソレート（WPI）  必須
+   製品：GronG ホエイプロテイン100 WPI
+   量：25〜30g×1日2回（水200mlで溶かす）
+
+② クレアチンモノハイドレート  強く推奨
+   製品：GronG クレアチンパウダー
+   量：5g/日（タイミング自由）
+
+③ EAA（必須アミノ酸9種）     推奨
+   製品：VALX EAA9
+   量：10g/トレ前30分</div>
+  </div>
+  <div class="card">
+    <div class="card-label">準備物チェックリスト</div>
+    <ul class="checklist">
+      <li>トレーニングシューズ（底が硬いもの）<span class="check-sub">コンバース オールスター 約3,000円</span></li>
+      <li>トレーニングベルト<span class="check-sub">腰が弱いため初日から推奨。約3,000〜5,000円</span></li>
+      <li>リストラップ<span class="check-sub">ベンチプレスの手首保護。約2,000円</span></li>
+      <li>フォームローラー<span class="check-sub">猫背改善用。約1,000〜2,000円</span></li>
+      <li>体重計（体脂肪率付き）<span class="check-sub">タニタ製 約3,000〜5,000円</span></li>
+    </ul>
+  </div>
+  <div class="warn"><div class="warn-title">⚠️ 怪我を避けるための絶対ルール</div><p>① 痛みと筋肉痛を区別する。関節・腱の痛みは即中止<br>② フォームが崩れたら重量を下げる<br>③ 5週目・9週目は必ずディロード（80%重量）で回復<br>④ 睡眠6時間未満の日はトレーニング強度を下げる<br>⑤ デッドリフトは必ずブレーシングしてから持ち上げる</p></div>
+  <div class="ok-box"><p><strong>走らなくていい。</strong>ランニングと筋トレの同日実施は干渉効果により筋肥大を妨げる。引き締めは食事管理で達成できる。</p></div>
+  <div class="ok-box"><p><strong>サウナはトレ後OK・推奨。</strong>プロテイン摂取後にサウナへ。前後に水500ml以上。</p></div>
+</div>
+<div id="logger" class="section">
+<div class="ch"><span class="ch-num">06</span><span class="ch-title">トレーニング記録</span></div>
+<div class="card" style="margin-bottom:12px">
+  <div class="card-label">今日のセッション</div>
+  <div style="display:flex;gap:8px;margin-bottom:12px">
+    <button onclick="setDay('A')" id="btnA" class="day-btn active-day">Day A<br><span style="font-size:10px;font-weight:400">スクワット中心</span></button>
+    <button onclick="setDay('B')" id="btnB" class="day-btn">Day B<br><span style="font-size:10px;font-weight:400">デッドリフト中心</span></button>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <label style="font-size:12px;font-weight:700;color:#444444;min-width:32px">週</label>
+    <input id="logWeekNum" type="number" min="1" max="12" value="1" class="log-inp" style="width:60px">
+    <span style="font-size:12px;color:#444444">週目</span>
+    <input id="logDate" type="date" class="log-inp" style="flex:1">
+  </div>
+</div>
+<div class="card" id="sq-block">
+  <div class="card-label" style="color:var(--sq)">● スクワット</div>
+  <div id="sq-sets"></div>
+  <button onclick="addSet('sq')" class="add-set-btn">＋ セット追加</button>
+</div>
+<div class="card" id="bp-block">
+  <div class="card-label" style="color:var(--bp)">● ベンチプレス</div>
+  <div id="bp-sets"></div>
+  <button onclick="addSet('bp')" class="add-set-btn">＋ セット追加</button>
+</div>
+<div class="card" id="dl-block" style="display:none">
+  <div class="card-label" style="color:var(--dl)">● デッドリフト</div>
+  <div id="dl-sets"></div>
+  <button onclick="addSet('dl')" class="add-set-btn">＋ セット追加</button>
+</div>
+<div class="card">
+  <div class="card-label">メモ・体調</div>
+  <textarea id="logMemo" placeholder="フォームの感触、体調、気づきなど..." style="width:100%;background:#ffffff;border:1px solid #cccccc;padding:10px;font-family:'Noto Sans JP',sans-serif;font-size:13px;color:#111111;resize:none;height:80px;outline:none;line-height:1.6"></textarea>
+</div>
+<button onclick="saveSession()" style="width:100%;background:#111111;color:#ffffff;border:none;padding:16px;font-family:'Noto Sans JP',sans-serif;font-size:14px;font-weight:700;letter-spacing:2px;cursor:pointer;margin-bottom:24px">記録を保存</button>
+<div class="ch" style="margin-top:8px"><span class="ch-num">—</span><span class="ch-title" style="font-size:16px">過去の記録</span></div>
+<div id="historyList"></div>
+</div>
+
+</div>
+<script>
+const ALL_IDS = ['health','deadlift','squat','bench','rules','logger'];
+function show(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.nav-tab')[ALL_IDS.indexOf(id)].classList.add('active');
+  window.scrollTo(0,0);
+  if (id === 'logger') { initLogger(); insertTimer(); renderHistory(); }
+}
+let currentDay = 'A';
+function setDay(d) {
+  currentDay = d;
+  document.getElementById('btnA').className = 'day-btn' + (d==='A' ? ' active-day' : '');
+  document.getElementById('btnB').className = 'day-btn' + (d==='B' ? ' active-day' : '');
+  document.getElementById('dl-block').style.display = d==='B' ? 'block' : 'none';
+  document.getElementById('bp-block').style.display = d==='A' ? 'block' : 'none';
+}
+const setData = { sq:[], bp:[], dl:[] };
+function initLogger() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('logDate').value = today;
+  if (setData.sq.length === 0) {
+    ['sq','bp'].forEach(k => { setData[k] = []; for(let i=0;i<3;i++) addSetData(k); });
+    setData.dl = []; addSetData('dl');
+  }
+  renderAllSets();
+}
+function addSetData(key) { setData[key].push({ kg:'', reps:'', interval:'' }); }
+function addSet(key) { addSetData(key); renderSets(key); }
+function delSet(key, idx) { if (setData[key].length <= 1) return; setData[key].splice(idx,1); renderSets(key); }
+function renderAllSets() { ['sq','bp','dl'].forEach(k => renderSets(k)); }
+function renderSets(key) {
+  const container = document.getElementById(key + '-sets');
+  const colors = { sq:'var(--sq)', bp:'var(--bp)', dl:'var(--dl)' };
+  let html = '<div class="set-header"><span>SET</span><span>重量kg</span><span>回数</span><span>休憩秒</span><span></span></div>';
+  setData[key].forEach((s, i) => {
+    html += '<div class="set-row">' +
+      '<div class="set-label" style="color:' + colors[key] + '">' + (i+1) + '</div>' +
+      '<div class="set-col"><input class="set-inp" type="number" step="2.5" min="0" placeholder="kg" value="' + s.kg + '" oninput="setData[\'' + key + '\'][' + i + '].kg=this.value"></div>' +
+      '<div class="set-col"><input class="set-inp" type="number" min="0" max="20" placeholder="回" value="' + s.reps + '" oninput="setData[\'' + key + '\'][' + i + '].reps=this.value"></div>' +
+      '<div class="set-col"><input class="set-inp" type="number" min="0" placeholder="秒" value="' + s.interval + '" oninput="setData[\'' + key + '\'][' + i + '].interval=this.value"></div>' +
+      '<button class="del-btn" onclick="delSet(\'' + key + '\',' + i + ')">×</button>' +
+      '</div>';
+  });
+  container.innerHTML = html;
+}
+let timerEl, timerInterval, timerRunning = false, timerSec = 0;
+function insertTimer() {
+  if (document.getElementById('intervalTimer')) { timerEl = document.getElementById('timerDisplay'); return; }
+  const bar = document.createElement('div');
+  bar.className = 'timer-bar'; bar.id = 'intervalTimer';
+  bar.innerHTML = '<div><div class="timer-label">INTERVAL TIMER</div><div class="timer-display" id="timerDisplay">0:00</div></div><div class="timer-btns"><button class="t-btn" id="timerStartBtn" onclick="toggleTimer()">START</button><button class="t-btn" onclick="resetTimer()">RESET</button></div>';
+  document.getElementById('logger').prepend(bar);
+  timerEl = document.getElementById('timerDisplay');
+}
+function toggleTimer() {
+  if (timerRunning) {
+    clearInterval(timerInterval); timerRunning = false;
+    document.getElementById('timerStartBtn').textContent = 'START';
+    document.getElementById('timerStartBtn').classList.remove('running');
+  } else {
+    timerRunning = true;
+    document.getElementById('timerStartBtn').textContent = 'STOP';
+    document.getElementById('timerStartBtn').classList.add('running');
+    timerInterval = setInterval(() => {
+      timerSec++;
+      const m = Math.floor(timerSec/60), s = timerSec%60;
+      timerEl.textContent = m + ':' + String(s).padStart(2,'0');
+      if (timerSec === 180) timerEl.style.color = '#ff6644';
+    }, 1000);
+  }
+}
+function resetTimer() {
+  clearInterval(timerInterval); timerRunning = false; timerSec = 0;
+  if (timerEl) { timerEl.textContent = '0:00'; timerEl.style.color = '#ffffff'; }
+  const btn = document.getElementById('timerStartBtn');
+  if (btn) { btn.textContent = 'START'; btn.classList.remove('running'); }
+}
+function saveSession() {
+  const date = document.getElementById('logDate').value;
+  const week = document.getElementById('logWeekNum').value;
+  const memo = document.getElementById('logMemo').value;
+  const keys = currentDay === 'A' ? ['sq','bp'] : ['sq','dl'];
+  const lifts = {};
+  keys.forEach(k => { lifts[k] = setData[k].filter(s => s.kg || s.reps); });
+  if (!Object.values(lifts).some(a => a.length > 0)) { alert('重量か回数を入力してください'); return; }
+  const sessions = JSON.parse(localStorage.getItem('big3_sessions') || '[]');
+  sessions.unshift({ id: Date.now(), date, week, day: currentDay, lifts, memo });
+  localStorage.setItem('big3_sessions', JSON.stringify(sessions));
+  ['sq','bp','dl'].forEach(k => { const c = k==='dl'?1:3; setData[k]=[]; for(let i=0;i<c;i++) addSetData(k); });
+  renderAllSets();
+  document.getElementById('logMemo').value = '';
+  resetTimer();
+  renderHistory();
+  alert('✅ 記録しました！');
+}
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  const sessions = JSON.parse(localStorage.getItem('big3_sessions') || '[]');
+  if (sessions.length === 0) { list.innerHTML = '<div class="empty-hist">まだ記録がありません</div>'; return; }
+  const names = { sq:'スクワット', bp:'ベンチプレス', dl:'デッドリフト' };
+  const cols = { sq:'var(--sq)', bp:'var(--bp)', dl:'var(--dl)' };
+  list.innerHTML = sessions.map(s => {
+    const lh = Object.entries(s.lifts).map(([k,sets]) => {
+      if (!sets||sets.length===0) return '';
+      const ss = sets.map((x,i) => 'S'+(i+1)+': '+(x.kg||'—')+'kg×'+(x.reps||'—')+'回'+(x.interval?'/'+x.interval+'秒':'')).join('　');
+      return '<div class="hist-lift-row"><div class="hist-lift-name" style="color:'+cols[k]+'">'+names[k]+'</div><div class="hist-sets-line">'+ss+'</div></div>';
+    }).join('');
+    return '<div class="hist-card"><div class="hist-top"><div><div class="hist-date">'+s.date+' / Week '+s.week+'</div><div class="hist-day">Day '+s.day+'</div></div><button class="del-hist" onclick="deleteSession('+s.id+')">削除</button></div>'+lh+(s.memo?'<div class="hist-memo">📝 '+s.memo+'</div>':'')+'</div>';
+  }).join('');
+}
+function deleteSession(id) {
+  if (!confirm('この記録を削除しますか？')) return;
+  let sessions = JSON.parse(localStorage.getItem('big3_sessions') || '[]');
+  sessions = sessions.filter(s => s.id !== id);
+  localStorage.setItem('big3_sessions', JSON.stringify(sessions));
+  renderHistory();
+}
+</script>
+</body>
+</html>
